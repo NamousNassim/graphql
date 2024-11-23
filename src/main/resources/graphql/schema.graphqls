@@ -8,6 +8,16 @@ type Query {
     allComptes: [Compte]
     compteById(id : ID):Compte
     totalSolde: SoldeStats
+    allTransactions: [Transaction]
+     transactionsByCompte(compteId: ID!): [Transaction]
+}
+
+type Transaction {
+    id: ID
+    montant: Float
+    dateTransaction: String
+    type: TypeTransaction
+    compte: Compte
 }
 
 type Compte {
@@ -16,17 +26,25 @@ type Compte {
     dateCreation: String
     type: TypeCompte
 }
-
-type Mutation {
-    saveCompte(compte:CompteRequest):Compte
+enum TypeTransaction {
+    DEBIT
+    CREDIT
 }
-
+type Mutation {
+    saveCompte(compte: CompteRequest): Compte
+    saveTransaction(transaction: TransactionRequest): Transaction  # Add this
+}
 input CompteRequest {
     solde: Float
-    dateCreation: String
+    dateCreation: String!
     type: TypeCompte
 }
 
+input TransactionRequest {
+    montant: Float!
+    type: TypeTransaction!
+    compteId: ID!
+}
 
 # Définition du type SoldeStats
 type SoldeStats {
